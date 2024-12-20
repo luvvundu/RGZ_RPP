@@ -1,15 +1,15 @@
 import unittest
 from app import app, db
 from models import User
-import os
+from sqlalchemy.exc import OperationalError
 
 class TestApp(unittest.TestCase):
     
     def setUp(self):
         """Настроим тестовое окружение"""
-        # Указываем строку подключения для PostgreSQL (поменяйте на свои данные)
+        # Используем базу данных PostgreSQL для тестов
         app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@localhost:5432/test_db'  # Замените на свои данные
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://vika:korea12345@localhost:5432/test_db'
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Отключаем отслеживание изменений для экономии памяти
 
         self.app = app.test_client()  # Используем FlaskClient для тестов
@@ -19,7 +19,10 @@ class TestApp(unittest.TestCase):
         self.app_context.push()
 
         # Создаём таблицы в базе данных для каждого теста
-        db.create_all()
+        try:
+            db.create_all()
+        except OperationalError as e:
+            self.fail(f"Не удалось подключиться к базе данных: {e}")
 
     def tearDown(self):
         """Очистим базу данных после каждого теста"""
