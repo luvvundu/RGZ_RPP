@@ -3,19 +3,29 @@ from app import app, db
 from models import User
 
 class TestApp(unittest.TestCase):
+    
     def setUp(self):
         """Настроим тестовое окружение"""
-        self.app = app.test_client()
-        self.app.testing = True
-        # Очистим базу данных перед каждым тестом
-        with self.app.app_context():
-            db.create_all()
+        # Создаём тестовое приложение с включённым режимом тестирования
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # Используем in-memory базу данных для тестов
+        self.app = app.test_client()  # Используем FlaskClient для тестов
+        
+        # Активируем контекст приложения
+        self.app_context = app.app_context()
+        self.app_context.push()
+
+        # Создаём таблицы в базе данных для каждого теста
+        db.create_all()
 
     def tearDown(self):
         """Очистим базу данных после каждого теста"""
-        with self.app.app_context():
-            db.session.remove()
-            db.drop_all()
+        # Убираем контекст приложения
+        self.app_context.pop()
+        
+        # Удаляем все данные из базы
+        db.session.remove()
+        db.drop_all()
 
     def test_register_user(self):
         """Тестирование регистрации пользователя"""
@@ -29,7 +39,6 @@ class TestApp(unittest.TestCase):
 
         # Проверяем, что в ответе есть сообщение о регистрации
         self.assertIn('Пользователь успешно зарегистрирован!', response_data)
-
 
 if __name__ == '__main__':
     unittest.main()
