@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+</head>
+<body>
+    <h1>Регистрация</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            <label for="username">Имя пользователя:</label>
+            {{ form.username() }}
+        </div>
+        <div>
+            <label for="password">Пароль:</label>
+            {{ form.password() }}
+        </div>
+        <div>
+            <label for="confirm_password">Подтвердите пароль:</label>
+            {{ form.confirm_password() }}
+        </div>
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+    <a href="{{ url_for('login') }}">Уже есть аккаунт? Войти</a>
+</body>
+</html>
+

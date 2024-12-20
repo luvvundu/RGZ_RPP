@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали заявки</title>
+</head>
+<body>
+    <h1>Детали заявки: {{ ticket.title }}</h1>
+    <p><strong>Описание:</strong> {{ ticket.description }}</p>
+    <p><strong>Статус:</strong> {{ ticket.status }}</p>
+
+    {% if current_user.role == 'admin' or ticket.user_id == current_user.id %}
+        <h3>Обновить заявку</h3>
+        <form method="POST" action="{{ url_for('update_ticket', ticket_id=ticket.id) }}">
+            <label for="title">Заголовок:</label>
+            <input type="text" name="title" value="{{ ticket.title }}">
+
+            <label for="description">Описание:</label>
+            <textarea name="description">{{ ticket.description }}</textarea>
+
+            <label for="status">Статус:</label>
+            <select name="status">
+                <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Открыта</option>
+                <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Закрыта</option>
+            </select>
+
+            <button type="submit">Обновить заявку</button>
+        </form>
+
+        <form method="POST" action="{{ url_for('delete_ticket', ticket_id=ticket.id) }}">
+            <button type="submit">Удалить заявку</button>
+        </form>
+    {% else %}
+        <p>У вас нет доступа для изменения этой заявки.</p>
+    {% endif %}
+
+    <a href="{{ url_for('get_tickets') }}">Назад</a>
+</body>
+</html>
+

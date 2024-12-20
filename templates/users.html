@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пользователи</title>
+</head>
+<body>
+    <h1>Список пользователей</h1>
+    <ul>
+        {% for user in users %}
+            <li>
+                {{ user.username }}
+                {% if user.role == 'admin' %}
+                    (Администратор)
+                {% else %}
+                    (Пользователь)
+                {% endif %}
+                {% if current_user.role == 'admin' %}
+                    <form method="POST" action="{{ url_for('update_user_role', user_id=user.id) }}">
+                        <select name="role">
+                            <option value="user" {% if user.role == 'user' %}selected{% endif %}>Пользователь</option>
+                            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Администратор</option>
+                        </select>
+                        <button type="submit">Обновить роль</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('home') }}">Назад</a>
+</body>
+</html>
