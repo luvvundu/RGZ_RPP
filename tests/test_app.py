@@ -1,14 +1,15 @@
 import unittest
 from app import app, db
 from models import User
+import os
 
 class TestApp(unittest.TestCase):
     
     def setUp(self):
         """Настроим тестовое окружение"""
-        # Используем in-memory базу данных для тестов
+        # Указываем строку подключения для PostgreSQL (поменяйте на свои данные)
         app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # SQLite in-memory база данных
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@localhost:5432/test_db'  # Замените на свои данные
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Отключаем отслеживание изменений для экономии памяти
 
         self.app = app.test_client()  # Используем FlaskClient для тестов
