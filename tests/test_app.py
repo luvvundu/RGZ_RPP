@@ -6,9 +6,11 @@ class TestApp(unittest.TestCase):
     
     def setUp(self):
         """Настроим тестовое окружение"""
-        # Создаём тестовое приложение с включённым режимом тестирования
+        # Используем in-memory базу данных для тестов
         app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # Используем in-memory базу данных для тестов
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # SQLite in-memory база данных
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Отключаем отслеживание изменений для экономии памяти
+
         self.app = app.test_client()  # Используем FlaskClient для тестов
         
         # Активируем контекст приложения
