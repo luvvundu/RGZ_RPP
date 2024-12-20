@@ -6,3 +6,4 @@ requests
 pytest
 bandit
 psycopg2-binary
+python-dotenv
