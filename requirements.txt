@@ -1,0 +1,8 @@
+Flask
+Flask-Login
+Flask-SQLAlchemy
+Flask-Migrate
+requests
+pytest
+bandit
+psycopg2-binary
